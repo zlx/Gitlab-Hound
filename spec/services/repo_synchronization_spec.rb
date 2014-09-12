@@ -4,19 +4,19 @@ describe RepoSynchronization do
   describe '#start' do
     it 'saves privacy flag' do
       attributes = {
-        full_name: 'user/newrepo',
+        name: 'user/newrepo',
         id: 456,
-        private: true,
+        public: false,
         owner: {
           type: 'User'
         }
       }
       resource = double(:resource, to_hash: attributes)
-      api = double(:github_api, repos: [resource])
-      allow(GithubApi).to receive(:new).and_return(api)
+      api = double(:gitlab_api, repos: [resource])
+      allow(GitlabApi).to receive(:new).and_return(api)
       user = create(:user)
-      github_token = 'token'
-      synchronization = RepoSynchronization.new(user, github_token)
+      gitlab_token = 'token'
+      synchronization = RepoSynchronization.new(user, gitlab_token)
 
       synchronization.start
 
@@ -25,19 +25,16 @@ describe RepoSynchronization do
 
     it 'saves organization flag' do
       attributes = {
-        full_name: 'user/newrepo',
+        name: 'user/newrepo',
         id: 456,
-        private: false,
-        owner: {
-          type: 'Organization'
-        }
+        public: false
       }
       resource = double(:resource, to_hash: attributes)
-      api = double(:github_api, repos: [resource])
-      allow(GithubApi).to receive(:new).and_return(api)
+      api = double(:gitlab_api, repos: [resource])
+      allow(GitlabApi).to receive(:new).and_return(api)
       user = create(:user)
-      github_token = 'token'
-      synchronization = RepoSynchronization.new(user, github_token)
+      gitlab_token = 'token'
+      synchronization = RepoSynchronization.new(user, gitlab_token)
 
       synchronization.start
 
@@ -46,52 +43,52 @@ describe RepoSynchronization do
 
     it 'replaces existing repos' do
       attributes = {
-        full_name: 'user/newrepo',
+        name: 'user/newrepo',
         id: 456,
-        private: false,
+        public: false,
         owner: {
           type: 'User'
         }
       }
       resource = double(:resource, to_hash: attributes)
-      github_token = 'token'
+      gitlab_token = 'token'
       membership = create(:membership)
       user = membership.user
-      api = double(:github_api, repos: [resource])
-      allow(GithubApi).to receive(:new).and_return(api)
-      synchronization = RepoSynchronization.new(user, github_token)
+      api = double(:gitlab_api, repos: [resource])
+      allow(GitlabApi).to receive(:new).and_return(api)
+      synchronization = RepoSynchronization.new(user, gitlab_token)
 
       synchronization.start
 
-      expect(GithubApi).to have_received(:new).with(github_token)
+      expect(GitlabApi).to have_received(:new).with(gitlab_token)
       expect(user.repos.size).to eq(1)
-      expect(user.repos.first.full_github_name).to eq 'user/newrepo'
-      expect(user.repos.first.github_id).to eq 456
+      expect(user.repos.first.full_gitlab_name).to eq 'user/newrepo'
+      expect(user.repos.first.gitlab_id).to eq 456
     end
 
-    it 'renames an existing repo if updated on github' do
+    it 'renames an existing repo if updated on gitlab' do
       membership = create(:membership)
       repo_name = 'user/newrepo'
       attributes = {
-        full_name: repo_name,
-        id: membership.repo.github_id,
-        private: true,
+        name: repo_name,
+        id: membership.repo.gitlab_id,
+        public: true,
         owner: {
           type: 'User'
         }
       }
       resource = double(:resource, to_hash: attributes)
-      github_token = 'githubtoken'
+      gitlab_token = 'gitlabtoken'
 
-      api = double(:github_api, repos: [resource])
-      allow(GithubApi).to receive(:new).and_return(api)
-      synchronization = RepoSynchronization.new(membership.user, github_token)
+      api = double(:gitlab_api, repos: [resource])
+      allow(GitlabApi).to receive(:new).and_return(api)
+      synchronization = RepoSynchronization.new(membership.user, gitlab_token)
 
       synchronization.start
 
-      expect(membership.user.repos.first.full_github_name).to eq repo_name
-      expect(membership.user.repos.first.github_id).
-        to eq membership.repo.github_id
+      expect(membership.user.repos.first.full_gitlab_name).to eq repo_name
+      expect(membership.user.repos.first.gitlab_id).
+        to eq membership.repo.gitlab_id
     end
 
     describe 'when a repo membership already exists' do
@@ -99,19 +96,19 @@ describe RepoSynchronization do
         first_membership = create(:membership)
         repo = first_membership.repo
         attributes = {
-          full_name: repo.full_github_name,
-          id: repo.github_id,
-          private: true,
+          name: repo.full_gitlab_name,
+          id: repo.gitlab_id,
+          public: true,
           owner: {
             type: 'User'
           }
         }
         resource = double(:resource, to_hash: attributes)
-        github_token = 'githubtoken'
+        gitlab_token = 'gitlabtoken'
         second_user = create(:user)
-        api = double(:github_api, repos: [resource])
-        allow(GithubApi).to receive(:new).and_return(api)
-        synchronization = RepoSynchronization.new(second_user, github_token)
+        api = double(:gitlab_api, repos: [resource])
+        allow(GitlabApi).to receive(:new).and_return(api)
+        synchronization = RepoSynchronization.new(second_user, gitlab_token)
 
         synchronization.start
 

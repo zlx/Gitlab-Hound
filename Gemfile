@@ -33,6 +33,7 @@ gem "sentry-raven"
 gem "stripe"
 gem "uglifier", ">= 1.0.3"
 gem "unicorn"
+gem 'gitlab'
 
 group :staging, :production do
   gem "rails_12factor"

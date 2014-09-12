@@ -5,7 +5,7 @@ class RepoSyncsController < ApplicationController
     JobQueue.push(
       RepoSynchronizationJob,
       current_user.id,
-      session[:github_token]
+      Rails.application.secrets['gitlab_private_token']
     )
     head 201
   end

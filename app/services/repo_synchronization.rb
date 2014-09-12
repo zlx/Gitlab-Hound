@@ -5,7 +5,7 @@ class RepoSynchronization
   attr_reader :user
 
   def api
-    @api ||= GithubApi.new(github_token)
+    @api ||= GitlabApi.new(github_token)
   end
 
   def start
@@ -20,10 +20,11 @@ class RepoSynchronization
   private
 
   def repo_attributes(attributes)
-    attributes.slice(:private).merge(
-      github_id: attributes[:id],
-      full_github_name: attributes[:full_name],
-      in_organization: attributes[:owner][:type] == ORGANIZATION_TYPE
-    )
+    {
+      private: !attributes["public"],
+      github_id: attributes["id"],
+      full_github_name: attributes["name"],
+      in_organization: !attributes["owner"]
+    }
   end
 end
