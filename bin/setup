@@ -9,7 +9,7 @@ mkdir -p .git/safe
 # Set up database
 bundle exec rake db:setup
 
-# Set up deploys
+ Set up deploys
 git remote add staging git@heroku.com:hound-staging.git
 heroku join --app hound-staging
 

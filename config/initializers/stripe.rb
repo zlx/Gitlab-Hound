@@ -1,1 +1,1 @@
-Stripe.api_key = ENV["STRIPE_API_KEY"]
+Stripe.api_key = Rails.application.secrets["STRIPE_API_KEY"]

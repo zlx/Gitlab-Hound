@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   private
 
   def force_https
-    if ENV['ENABLE_HTTPS'] == 'yes'
+    if Rails.application.secrets['ENABLE_HTTPS'] == 'yes'
       if !request.ssl? && force_https?
         redirect_to protocol: "https://", status: :moved_permanently
       end

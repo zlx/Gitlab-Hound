@@ -1,2 +1,2 @@
-REDIS = Redis.new(url: ENV['REDISTOGO_URL'])
+REDIS = Redis.new(url: Rails.application.secrets['REDISTOGO_URL'])
 Resque.redis = REDIS

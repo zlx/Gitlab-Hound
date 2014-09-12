@@ -2,7 +2,7 @@
 
 :javascript
   Settings = {
-    stripePublishableKey: '#{ENV['STRIPE_PUBLISHABLE_KEY']}',
+    stripePublishableKey: '#{Rails.application.secrets['STRIPE_PUBLISHABLE_KEY']}',
     userEmailAddress: '#{current_user.email_address}'
   };
 
