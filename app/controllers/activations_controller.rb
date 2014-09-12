@@ -4,10 +4,8 @@ class ActivationsController < ApplicationController
 
   respond_to :json
 
-  before_action :check_privacy
-
   def create
-    if activator.activate(repo, session[:github_token])
+    if activator.activate(repo, Rails.application.secrets['gitlab_private_token'])
       analytics.track_activated(repo)
       render json: repo, status: :created
     else
@@ -28,9 +26,5 @@ class ActivationsController < ApplicationController
 
   def activator
     RepoActivator.new
-  end
-
-  def check_privacy
-    raise CannotActivatePrivateRepo if repo.private?
   end
 end

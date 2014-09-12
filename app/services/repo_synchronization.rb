@@ -23,8 +23,8 @@ class RepoSynchronization
     {
       private: !attributes["public"],
       github_id: attributes["id"],
-      full_github_name: attributes["name"],
-      in_organization: !attributes["owner"]
+      full_github_name: "#{attributes["namespace"]["path"]}/#{attributes["name"]}",
+      in_organization: attributes["owner"].nil?
     }
   end
 end

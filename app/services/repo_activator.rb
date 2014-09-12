@@ -1,15 +1,15 @@
 class RepoActivator
-  def activate(repo, github_token)
+  def activate(repo, gitlab_token)
     change_repository_state_quietly do
-      github = GithubApi.new(github_token)
-      add_hound_to_repo(github, repo) && create_web_hook(github, repo)
+      gitlab = GitlabApi.new(gitlab_token)
+      add_hound_to_repo(gitlab, repo) && create_web_hook(gitlab, repo)
     end
   end
 
-  def deactivate(repo, github_token)
+  def deactivate(repo, gitlab_token)
     change_repository_state_quietly do
-      github = GithubApi.new(github_token)
-      github.remove_hook(repo.full_github_name, repo.hook_id)
+      gitlab = GitlabApi.new(gitlab_token)
+      gitlab.remove_hook(repo.full_gitlab_name, repo.hook_id)
       repo.deactivate
     end
   end
@@ -18,21 +18,24 @@ class RepoActivator
 
   def change_repository_state_quietly
     yield
-  rescue Octokit::Error => error
-    Raven.capture_exception(error)
+  rescue Exception => error
+    Rails.logger.tagged("REPO_ACTIVATOR") do
+      Rails.logger.error "#{error}"
+    end
     false
   end
 
-  def create_web_hook(github, repo)
-    github.create_hook(repo.full_github_name, builds_url) do |hook|
+  def create_web_hook(gitlab, repo)
+    gitlab.create_hook(repo.github_id, builds_url) do |hook|
+      binding.pry
       repo.update_attributes(hook_id: hook.id, active: true)
     end
   end
 
-  def add_hound_to_repo(github, repo)
-    github.add_user_to_repo(
+  def add_hound_to_repo(gitlab, repo)
+    gitlab.add_user_to_repo(
       Rails.application.secrets['HOUND_GITHUB_USERNAME'],
-      repo.full_github_name
+      repo.github_id
     )
   end
 

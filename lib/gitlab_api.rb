@@ -14,18 +14,15 @@ class GitlabApi
     client.projects
   end
 
-  def add_user_to_repo(username, repo_name)
-    repo = repo(repo_name)
-
-    if repo.organization
-      add_user_to_org(username, repo)
-    else
-      client.add_collaborator(repo.full_name, username)
+  def add_user_to_repo(username, repo_id)
+    repo = repo(repo_id)
+    if client.team_members(repo_id, query: username).empty?
+      fail "Please add #{username} into #{repo.name} team members"
     end
   end
 
-  def repo(repo_name)
-    client.repository(repo_name)
+  def repo(repo_id)
+    client.project(repo_id)
   end
 
   def add_comment(options)
@@ -39,16 +36,15 @@ class GitlabApi
     )
   end
 
-  def create_hook(full_repo_name, callback_endpoint)
-    hook = client.create_hook(
-      full_repo_name,
-      'web',
-      { url: callback_endpoint },
-      { events: ['pull_request'], active: true }
+  def create_hook(repo_id, callback_endpoint)
+    hook = client.add_project_hook(
+      repo_id, 
+      callback_endpoint, 
+      { merge_request_events: true }
     )
 
     yield hook if block_given?
-  rescue Octokit::UnprocessableEntity => error
+  rescue Exception => error
     unless error.message.include? 'Hook already exists'
       raise
     end

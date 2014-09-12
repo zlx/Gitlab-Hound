@@ -53,7 +53,9 @@ class ApplicationController < ActionController::Base
   end
 
   def report_exception(exception, metadata)
-    Raven.capture_exception(exception, extra: metadata)
+    Rails.logger.tagged("APPLICATION_CONTROLLER") do
+      Rails.logger.error "#{exception}, #{ { extra: metadata } }"
+    end
   end
 
   protected

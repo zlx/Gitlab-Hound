@@ -48,10 +48,9 @@ class RepoSubscriber
   private
 
   def report_exception(error)
-    Raven.capture_exception(
-      error,
-      extra: { user_id: user.id, repo_id: repo.id }
-    )
+    Rails.logger.tagged("REPO_SUBSCRIBER") do
+      Rails.logger.error "#{error}, #{ { user_id: user.id, repo_id: repo.id } }"
+    end
   end
 
   def find_stripe_customer
