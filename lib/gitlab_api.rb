@@ -23,12 +23,17 @@ class GitlabApi
   end
 
   def repo(repo_id)
-    client.project(repo_id)
+    if repo_id.is_a? Integer
+      client.project(repo_id)
+    else
+      client.project(CGI::escape(repo_id))
+    end
   end
 
   def add_comment(options)
     # should use comment on line
     p options
+    client.create_merge_request_comment()
     binding.pry
     #client.create_pull_request_comment(
       #options[:commit].repo_name,

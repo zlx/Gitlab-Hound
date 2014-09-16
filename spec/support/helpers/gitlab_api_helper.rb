@@ -13,14 +13,20 @@ module GitlabApiHelper
   end
 
   def stub_repo_request(repo_id, auth_token)
+    body = if repo_id.is_a?(Integer)
+      File.read('spec/support/fixtures/project.json').gsub("ID", "#{repo_id}")
+    else
+      File.read('spec/support/fixtures/project_with_name.json').gsub("REPO_NAME", repo_id)
+    end
+
     stub_request(
       :get,
-      "http://gitlab.smartlionapp.com/api/v3/projects/#{repo_id}"
+      "http://gitlab.smartlionapp.com/api/v3/projects/#{repo_id.is_a?(Integer) ? repo_id : CGI::escape(repo_id)}"
     ).with(
       headers: { 'Accept' => 'application/json', 'Private-Token' => "#{auth_token}" }
     ).to_return(
       status: 200,
-      body: File.read('spec/support/fixtures/project.json').gsub("ID", "#{repo_id}"),
+      body: body,
       headers: { 'Content-Type' => 'application/json; charset=utf-8' }
     )
   end
@@ -57,7 +63,7 @@ module GitlabApiHelper
       "http://gitlab.smartlionapp.com/api/v3/projects/#{repo_id}/hooks"
     ).with(
       headers: { 'Accept' => 'application/json', 'Private-Token' => "#{token}" },
-      body: "url=http%3A%2F%2Fexample.com%2Fcallback_url"
+      body: "url=#{CGI::escape(callback_url)}&merge_requests_events=true"
     ).to_return(
       status: 200,
       body: File.read('spec/support/fixtures/gitlab_hook.json'),

@@ -53,4 +53,23 @@ describe GitlabApi do
 
   end
 
+  describe "repo" do
+    it "should get project via id" do
+      auth_token = 'authtoken'
+      api = GitlabApi.new(auth_token)
+      stub_repo_request 10, auth_token
+
+      expect(api.repo(10)).to be_kind_of(Gitlab::ObjectifiedHash)
+    end
+
+    it "should get project via namespace/name" do
+      auth_token = 'authtoken'
+      api = GitlabApi.new(auth_token)
+      repo_name = 'namespace/name'
+      stub_repo_request repo_name, auth_token
+
+      expect(api.repo(repo_name)).to be_kind_of(Gitlab::ObjectifiedHash)
+    end
+  end
+
 end
