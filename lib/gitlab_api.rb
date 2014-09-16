@@ -31,18 +31,21 @@ class GitlabApi
   end
 
   def add_comment(options)
-    # should use comment on line
-    p options
-    client.create_merge_request_comment()
-    binding.pry
-    #client.create_pull_request_comment(
-      #options[:commit].repo_name,
-      #options[:pull_request_number],
-      #options[:comment],
-      #options[:commit].sha,
-      #options[:filename],
-      #options[:patch_position]
-    #)
+    # TODO should use comment on line
+    # wait MR https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/137
+    repo = repo(options[:commit].repo_name)
+    client.create_merge_request_comment(
+      repo.id, 
+      options[:pull_request_number],
+      %{
+      commit: #{options[:commit].sha},
+      filename: #{options[:filename]},
+      line_position: #{options[:patch_position]},
+      comment: 
+
+      #{options[:comment]}
+    }
+    )
   end
 
   def create_hook(repo_id, callback_endpoint)
@@ -64,19 +67,35 @@ class GitlabApi
   end
 
   def commit_files(full_repo_name, commit_sha)
-    #commit = client.commit(full_repo_name, commit_sha)
-    #commit.files
+    # TODO need implement use for commit
+    repo = repo(full_repo_name)
+    commit_diff = client.commit_diff(repo.id, commit_sha)
+    commit_diff.map do |diff|
+      status = if diff.deleted_file
+          "removed"
+        elsif diff.new_file
+          "added"
+        elsif diff.renamed_file
+          "rename"
+        else
+          "modified"
+        end
+      CommitDiff.new(diff.diff, diff.new_path, status)
+    end
   end
 
   def pull_request_comments(full_repo_name, pull_request_number)
+    # TODO need implement use for pull_request
     #client.pull_request_comments(full_repo_name, pull_request_number)
   end
 
   def pull_request_files(full_repo_name, number)
+    # TODO need implement use for stylechecker
     #client.pull_request_files(full_repo_name, number)
   end
 
   def file_contents(full_repo_name, filename, sha)
+    # TODO need implement use for commit
     #client.contents(full_repo_name, path: filename, ref: sha)
   end
 

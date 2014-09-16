@@ -71,6 +71,32 @@ module GitlabApiHelper
     )
   end
 
+  def stub_add_comment_request(repo_id, pull_request_number, token, options)
+    stub_request(
+      :post, 
+      "http://gitlab.smartlionapp.com/api/v3/projects/#{repo_id}/merge_request/#{pull_request_number}/comments"
+    ).with(
+      headers: { 'Accept' => 'application/json', 'Private-Token' => "#{token}" },
+    ).to_return(
+      status: 200,
+      body: File.read('spec/support/fixtures/comment.json'),
+      headers: { 'Content-Type' => 'application/json; charset=utf-8' }
+    )
+  end
+
+  def stub_commit_files_request(repo_id, commit_sha, token)
+    stub_request(
+      :get, 
+      "http://gitlab.smartlionapp.com/api/v3/projects/#{repo_id}/repository/commits/#{commit_sha}/diff"
+    ).with(
+      :headers => { 'Accept' => 'application/json', 'Private-Token' => "#{token}" }
+    ).to_return(
+      :status => 200, 
+      :body => File.read('spec/support/fixtures/comment_files.json'), 
+      :headers => {}
+    )
+  end
+
   private
 
   def auth_token

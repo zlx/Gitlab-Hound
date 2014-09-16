@@ -13,7 +13,7 @@ class Commit
     else
       ""
     end
-  rescue Octokit::NotFound
+  rescue Gitlab::Error::Error
     ""
   end
 
