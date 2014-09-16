@@ -40,11 +40,12 @@ group :staging, :production do
 end
 
 group :development, :test do
-  gem "byebug"
   gem "foreman"
   gem "konacha"
   gem "poltergeist"
   gem "rspec-rails", ">= 2.14"
+  gem 'pry'
+  gem 'pry-byebug'
 end
 
 group :test do

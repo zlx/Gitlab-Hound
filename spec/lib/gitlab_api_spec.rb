@@ -25,7 +25,7 @@ describe GitlabApi do
       stub_repo_request(repo_id, auth_token)
       stub_repo_teams_query_request(repo_id, 'zlx', auth_token)
 
-      expect{api.add_user_to_repo("zlx", repo_id)}.not_to raise_error
+      expect(api.add_user_to_repo("zlx", repo_id)).to eq true
     end
 
     it "should raise when user not in project team members" do

@@ -19,6 +19,7 @@ class GitlabApi
     if client.team_members(repo_id, query: username).empty?
       fail "Please add #{username} into #{repo.name} team members"
     end
+    true
   end
 
   def repo(repo_id)
@@ -26,21 +27,24 @@ class GitlabApi
   end
 
   def add_comment(options)
-    client.create_pull_request_comment(
-      options[:commit].repo_name,
-      options[:pull_request_number],
-      options[:comment],
-      options[:commit].sha,
-      options[:filename],
-      options[:patch_position]
-    )
+    # should use comment on line
+    p options
+    binding.pry
+    #client.create_pull_request_comment(
+      #options[:commit].repo_name,
+      #options[:pull_request_number],
+      #options[:comment],
+      #options[:commit].sha,
+      #options[:filename],
+      #options[:patch_position]
+    #)
   end
 
   def create_hook(repo_id, callback_endpoint)
     hook = client.add_project_hook(
       repo_id, 
       callback_endpoint, 
-      { merge_request_events: true }
+      { merge_requests_events: true }
     )
 
     yield hook if block_given?
@@ -50,34 +54,34 @@ class GitlabApi
     end
   end
 
-  def remove_hook(full_github_name, hook_id)
-    client.remove_hook(full_github_name, hook_id)
+  def remove_hook(repo_id, hook_id)
+    client.delete_project_hook(repo_id, hook_id) rescue false
   end
 
   def commit_files(full_repo_name, commit_sha)
-    commit = client.commit(full_repo_name, commit_sha)
-    commit.files
+    #commit = client.commit(full_repo_name, commit_sha)
+    #commit.files
   end
 
   def pull_request_comments(full_repo_name, pull_request_number)
-    client.pull_request_comments(full_repo_name, pull_request_number)
+    #client.pull_request_comments(full_repo_name, pull_request_number)
   end
 
   def pull_request_files(full_repo_name, number)
-    client.pull_request_files(full_repo_name, number)
+    #client.pull_request_files(full_repo_name, number)
   end
 
   def file_contents(full_repo_name, filename, sha)
-    client.contents(full_repo_name, path: filename, ref: sha)
+    #client.contents(full_repo_name, path: filename, ref: sha)
   end
 
   def user_teams
-    client.user_teams
+    #client.user_teams
   end
 
   def email_address
-    primary_email = client.emails.detect { |email| email['primary'] }
-    primary_email['email']
+    #primary_email = client.emails.detect { |email| email['primary'] }
+    #primary_email['email']
   end
 
   private

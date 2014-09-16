@@ -9,7 +9,7 @@ class RepoActivator
   def deactivate(repo, gitlab_token)
     change_repository_state_quietly do
       gitlab = GitlabApi.new(gitlab_token)
-      gitlab.remove_hook(repo.full_gitlab_name, repo.hook_id)
+      gitlab.remove_hook(repo.github_id, repo.hook_id)
       repo.deactivate
     end
   end
@@ -27,8 +27,7 @@ class RepoActivator
 
   def create_web_hook(gitlab, repo)
     gitlab.create_hook(repo.github_id, builds_url) do |hook|
-      binding.pry
-      repo.update_attributes(hook_id: hook.id, active: true)
+      repo.update!(hook_id: hook.id, active: true)
     end
   end
 

@@ -6,7 +6,7 @@ class DeactivationsController < ApplicationController
   def create
     repo = current_user.repos.find(params[:repo_id])
 
-    if activator.deactivate(repo, session[:github_token])
+    if activator.deactivate(repo, Rails.application.secrets['gitlab_private_token'])
       analytics.track_deactivated(repo)
       render json: repo, status: :created
     else

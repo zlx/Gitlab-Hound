@@ -48,7 +48,7 @@ class PullRequest
   end
 
   def api
-    @api ||= GithubApi.new(github_token)
+    @api ||= GitlabApi.new(github_token)
   end
 
   def number
