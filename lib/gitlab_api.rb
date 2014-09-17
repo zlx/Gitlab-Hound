@@ -88,7 +88,8 @@ class GitlabApi
 
   def file_contents(full_repo_name, filename, sha)
     # TODO need implement use for commit
-    #client.contents(full_repo_name, path: filename, ref: sha)
+    repo = repo(full_repo_name)
+    client.contents(repo.id, sha, filename)
   end
 
   def user_teams

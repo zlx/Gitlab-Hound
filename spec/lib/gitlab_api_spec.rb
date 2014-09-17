@@ -115,7 +115,13 @@ describe GitlabApi do
 
   describe '#file_contents' do
     it 'should check if file in? commit file changed' do
-      api.file_contents repo_name, 'run.rb', 'longlongrandomstring'
+      stub_get(
+        "http://gitlab.smartlionapp.com/api/v3/projects/#{CGI::escape(repo_name)}", 
+        'project_with_name'
+      )
+      stub_get(
+        "http://gitlab.smartlionapp.com/api/v3/projects/7/repository/blobs/longlongrandomstring?filepath=run.rb", 'blob_sha')
+      expect(api.file_contents(repo_name, 'run.rb', 'longlongrandomstring')).to eq "call run.rb\n"
     end
   end
 
