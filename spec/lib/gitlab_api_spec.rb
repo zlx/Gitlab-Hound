@@ -2,6 +2,7 @@ require 'fast_spec_helper'
 require "attr_extras"
 require 'lib/gitlab_api'
 require 'app/models/commit_diff'
+require 'app/models/comment'
 require 'json'
 
 describe GitlabApi do
@@ -101,14 +102,23 @@ describe GitlabApi do
   describe "#pull_request_comments" do
     it "should return all comments in one merge request" do
       mr_number = 10
-      api.pull_request_comments repo_name, mr_number
+      stub_repo_request(repo_name, auth_token)
+      stub_gitlab_comments_request(7, mr_number, auth_token)
+      comment = api.pull_request_comments(repo_name, mr_number).last
+      expect(comment).to be_kind_of Comment
+      expect(comment.path).to eq "path/to/run.rb"
+      expect(comment.original_position).to eq 10
     end
   end
 
   describe "#pull_request_files" do
     it "should return all file changes in one merge request" do
       mr_number = 10
-      api.pull_request_files repo_name, mr_number
+      stub_repo_request(repo_name, auth_token)
+      stub_merge_request_request(7, mr_number, auth_token)
+      stub_compare_diff_request(7, 'master', 'feature', auth_token)
+      file = api.pull_request_files(repo_name, mr_number).last
+      expect(file).to be_kind_of CommitDiff
     end
   end
 

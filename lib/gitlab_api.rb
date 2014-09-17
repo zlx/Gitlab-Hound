@@ -67,31 +67,22 @@ class GitlabApi
   end
 
   def commit_files(full_repo_name, commit_sha)
-    # TODO need implement use for commit
     repo = repo(full_repo_name)
-    commit_diff = client.commit_diff(repo.id, commit_sha)
-    commit_diff.map do |diff|
-      status = if diff.deleted_file
-          "removed"
-        elsif diff.new_file
-          "added"
-        elsif diff.renamed_file
-          "rename"
-        else
-          "modified"
-        end
-      CommitDiff.new(diff.diff, diff.new_path, status)
-    end
+    client.commit_diff(repo.id, commit_sha)
+    .map{ |diff| build_commit_diff(diff) }
   end
 
   def pull_request_comments(full_repo_name, pull_request_number)
-    # TODO need implement use for pull_request
-    #client.pull_request_comments(full_repo_name, pull_request_number)
+    # TODO return comments with path and position
+    repo = repo(full_repo_name)
+    client.merge_request_comments repo.id, pull_request_number
   end
 
   def pull_request_files(full_repo_name, number)
-    # TODO need implement use for stylechecker
-    #client.pull_request_files(full_repo_name, number)
+    repo = repo(full_repo_name)
+    mr = client.merge_request(repo.id, number)
+    client.compare(repo.id, mr.target_branch, mr.source_branch)
+    .diffs.map{ |diff| build_commit_diff(diff) }
   end
 
   def file_contents(full_repo_name, filename, sha)
@@ -110,63 +101,17 @@ class GitlabApi
 
   private
 
-  def add_user_to_org(username, repo)
-    repo_teams = client.repository_teams(repo.full_name)
-    admin_team = admin_access_team(repo_teams)
-
-    if admin_team
-      add_user_to_team(username, admin_team.id)
-    else
-      add_user_and_repo_to_services_team(username, repo)
-    end
+  def build_commit_diff diff
+    diff = OpenStruct.new(diff) if diff.is_a? Hash
+    CommitDiff.new(diff.diff, diff.new_path, if diff.deleted_file
+          "removed"
+        elsif diff.new_file
+          "added"
+        elsif diff.renamed_file
+          "rename"
+        else
+          "modified"
+        end)
   end
 
-  def admin_access_team(repo_teams)
-    token_bearer = GithubUser.new(self)
-
-    repo_teams.detect do |repo_team|
-      token_bearer.has_admin_access_through_team?(repo_team.id)
-    end
-  end
-
-  def add_user_and_repo_to_services_team(username, repo)
-    team = find_team(SERVICES_TEAM_NAME, repo)
-
-    if team
-      client.add_team_repository(team.id, repo.full_name)
-    else
-      team = create_team(SERVICES_TEAM_NAME, repo)
-    end
-
-    add_user_to_team(username, team.id)
-  end
-
-  def add_user_to_team(username, team_id)
-    client.add_team_member(team_id, username)
-  end
-
-  def find_team(name, repo)
-    client.org_teams(repo.organization.login).detect do |team|
-      team.name == name
-    end
-  end
-
-  def create_team(name, repo)
-    client.create_team(
-      repo.organization.login,
-      {
-        name: name,
-        repo_names: [repo.full_name],
-        permission: 'pull'
-      }
-    )
-  end
-
-  def orgs
-    client.orgs
-  end
-
-  def authorized_repos(repos)
-    repos.select {|repo| repo.permissions.admin }
-  end
 end

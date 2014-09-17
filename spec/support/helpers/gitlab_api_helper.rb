@@ -97,9 +97,43 @@ module GitlabApiHelper
     )
   end
 
-  private
-
-  def auth_token
-    AuthenticationHelper::GITHUB_TOKEN
+  def stub_gitlab_comments_request(repo_id, mr_number, token)
+    stub_request(
+      :get, 
+      "http://gitlab.smartlionapp.com/api/v3/projects/#{repo_id}/merge_request/#{mr_number}/comments"
+    ).with(
+      :headers => { 'Accept' => 'application/json', 'Private-Token' => "#{token}" }
+    ).to_return(
+      :status => 200, 
+      :body => File.read('spec/support/fixtures/gitlab_comments.json'), 
+      :headers => {}
+    )
   end
+
+  def stub_merge_request_request(repo_id, mr_number, token)
+    stub_request(
+      :get, 
+      "http://gitlab.smartlionapp.com/api/v3/projects/#{repo_id}/merge_request/#{mr_number}"
+    ).with(
+      :headers => { 'Accept' => 'application/json', 'Private-Token' => "#{token}" }
+    ).to_return(
+      :status => 200, 
+      :body => File.read('spec/support/fixtures/merge_request.json'), 
+      :headers => {}
+    )
+  end
+
+  def stub_compare_diff_request(repo_id, from, to, token)
+    stub_request(
+      :get, 
+      "http://gitlab.smartlionapp.com/api/v3/projects/#{repo_id}/repository/compare?from=#{from}&to=#{to}"
+    ).with(
+      :headers => { 'Accept' => 'application/json', 'Private-Token' => "#{token}" }
+    ).to_return(
+      :status => 200, 
+      :body => File.read('spec/support/fixtures/compare_merge_request_diff.json'), 
+      :headers => {}
+    )
+  end
+
 end
