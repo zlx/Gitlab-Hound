@@ -13,10 +13,8 @@ describe GitlabApi do
 
   describe '#repos' do
     it 'fetches all repos from Github' do
-      stub_repo_requests(auth_token)
-
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects", "projects")
       repos = api.repos
-
       expect(repos.size).to eq 2
     end
   end
@@ -24,17 +22,15 @@ describe GitlabApi do
   describe "#add_user_to_repo" do
     it "should check user in project team members" do
       repo_id = 10
-      stub_repo_request(repo_id, auth_token)
-      stub_repo_teams_query_request(repo_id, 'zlx', auth_token)
-
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/10", "project")
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/10/members?query=zlx", 'team_users')
       expect(api.add_user_to_repo("zlx", repo_id)).to eq true
     end
 
     it "should raise when user not in project team members" do
       repo_id = 10
-      stub_repo_request(repo_id, auth_token)
-      stub_repo_teams_query_empty_request(repo_id, 'zlx', auth_token)
-
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/10", "project")
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/10/members?query=zlx", 'empty_team_users')
       expect{api.add_user_to_repo("zlx", repo_id)}.to raise_error(RuntimeError)
     end
   end
@@ -44,7 +40,7 @@ describe GitlabApi do
       repo_id = 10
       repo_name = "hook_merge_request"
       callback_url = "http://example.com/callback_url"
-      stub_add_hook_request(repo_id, callback_url, auth_token)
+      stub_post("http://gitlab.smartlionapp.com/api/v3/projects/10/hooks", "gitlab_hook")
 
       api.create_hook repo_id, callback_url
     end
@@ -53,14 +49,14 @@ describe GitlabApi do
 
   describe "#repo" do
     it "should get project via id" do
-      stub_repo_request 10, auth_token
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/10", "project")
 
       expect(api.repo(10)).to be_kind_of(Gitlab::ObjectifiedHash)
     end
 
     it "should get project via namespace/name" do
       repo_name = 'namespace/name'
-      stub_repo_request repo_name, auth_token
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/#{CGI::escape(repo_name)}", "project_with_name")
 
       expect(api.repo(repo_name)).to be_kind_of(Gitlab::ObjectifiedHash)
     end
@@ -68,8 +64,8 @@ describe GitlabApi do
 
   describe "#add_commit" do
     it "should add commit to gitlab" do
-      stub_repo_request(repo_name, auth_token)
-      stub_add_comment_request(7, 100, auth_token, {})
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/#{CGI::escape(repo_name)}", "project_with_name")
+      stub_post("http://gitlab.smartlionapp.com/api/v3/projects/7/merge_request/100/comments", "comment")
       commit = double("commit", sha: "randomlonglongstring", repo_name: repo_name)
       api.add_comment(
         commit: commit, 
@@ -82,9 +78,9 @@ describe GitlabApi do
 
   describe "#commit_files" do
     it "should return commit files via commit_sha" do
-      stub_repo_request(repo_name, auth_token)
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/#{CGI::escape(repo_name)}", "project_with_name")
       commit_sha = "longlongrandomstring"
-      stub_commit_files_request(7, commit_sha, auth_token)
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/7/repository/commits/#{commit_sha}/diff", "comment_files")
       file = api.commit_files(repo_name, commit_sha).last
       expect(file).to be_kind_of CommitDiff
       expect(file.filename).to eq 'run.rb'
@@ -102,8 +98,8 @@ describe GitlabApi do
   describe "#pull_request_comments" do
     it "should return all comments in one merge request" do
       mr_number = 10
-      stub_repo_request(repo_name, auth_token)
-      stub_gitlab_comments_request(7, mr_number, auth_token)
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/#{CGI::escape(repo_name)}", "project_with_name")
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/7/merge_request/#{mr_number}/comments", "gitlab_comments")
       comment = api.pull_request_comments(repo_name, mr_number).last
       expect(comment).to be_kind_of Comment
       expect(comment.path).to eq "path/to/run.rb"
@@ -114,9 +110,9 @@ describe GitlabApi do
   describe "#pull_request_files" do
     it "should return all file changes in one merge request" do
       mr_number = 10
-      stub_repo_request(repo_name, auth_token)
-      stub_merge_request_request(7, mr_number, auth_token)
-      stub_compare_diff_request(7, 'master', 'feature', auth_token)
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/#{CGI::escape(repo_name)}", "project_with_name")
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/7/merge_request/#{mr_number}", "merge_request")
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/7/repository/compare?from=master&to=feature", "compare_merge_request_diff")
       file = api.pull_request_files(repo_name, mr_number).last
       expect(file).to be_kind_of CommitDiff
     end

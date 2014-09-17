@@ -74,6 +74,7 @@ class GitlabApi
 
   def pull_request_comments(full_repo_name, pull_request_number)
     # TODO return comments with path and position
+    # wait MR https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/137
     repo = repo(full_repo_name)
     client.merge_request_comments repo.id, pull_request_number
   end
