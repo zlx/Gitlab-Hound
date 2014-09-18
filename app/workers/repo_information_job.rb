@@ -1,9 +1,9 @@
 class RepoInformationJob
-  extend Retryable
+  include Sidekiq::Worker
 
-  @queue = :low
+  sidekiq_options queue: :low, retry: 10
 
-  def self.perform(repo_id, github_token)
+  def perform(repo_id, github_token)
     repo = Repo.find(repo_id)
     repo.touch
 
@@ -14,7 +14,5 @@ class RepoInformationJob
       private: github_data[:private],
       in_organization: github_data[:organization].present?
     )
-  rescue Resque::TermException
-    Resque.enqueue(self, user_id, github_token)
   end
 end

@@ -15,6 +15,7 @@ class BuildsController < ApplicationController
   end
 
   def ignore_confirmation_pings
+binding.pry
     if payload.ping?
       head :ok
     end

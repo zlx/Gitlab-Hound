@@ -87,7 +87,6 @@ class GitlabApi
   end
 
   def file_contents(full_repo_name, filename, sha)
-    # TODO need implement use for commit
     repo = repo(full_repo_name)
     client.contents(repo.id, sha, filename)
   end

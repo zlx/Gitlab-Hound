@@ -1,5 +1,6 @@
 Houndapp::Application.routes.draw do
-  mount Resque::Server, at: '/queue'
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
 
   get '/auth/github/callback', to: 'sessions#create'
   get '/sign_in', to: 'sessions#new'

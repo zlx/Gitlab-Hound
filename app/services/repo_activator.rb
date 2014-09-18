@@ -39,7 +39,7 @@ class RepoActivator
   end
 
   def builds_url
-    protocol = Rails.application.secrets['ENABLE_HTTPS'] == 'yes' ? 'https' : 'http'
+    protocol = Rails.application.secrets['ENABLE_HTTPS'] ? 'https' : 'http'
     URI.join("#{protocol}://#{Rails.application.secrets['HOST']}", 'builds').to_s
   end
 end
