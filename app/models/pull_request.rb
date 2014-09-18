@@ -60,6 +60,6 @@ class PullRequest
   end
 
   def head_commit
-    @head_commit ||= Commit.new(full_repo_name, payload.head_sha, api)
+    @head_commit ||= Commit.new(full_repo_name, payload, api)
   end
 end

@@ -30,6 +30,10 @@ class GitlabApi
     end
   end
 
+  def branch_commit(repo_id, branch_name)
+    client.branch(repo_id, branch_name).commit.id
+  end
+
   def add_comment(options)
     # TODO should use comment on line
     # wait MR https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/137

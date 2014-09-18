@@ -1,18 +1,17 @@
 class Commit
-  pattr_initialize :repo_name, :sha, :github
-  attr_reader :repo_name, :sha
+  pattr_initialize :repo_name, :payload, :github
+  attr_reader :repo_name
 
   def files
     @files ||= github_files.map { |file| build_commit_file(file) }
   end
 
+  def sha
+    github.branch_commit(payload.source_repo_id, payload.branch_name)
+  end
+
   def file_content(filename)
     contents = @github.file_contents(repo_name, filename, sha)
-    if contents && contents.content
-      Base64.decode64(contents.content)
-    else
-      ""
-    end
   rescue Gitlab::Error::Error
     ""
   end
