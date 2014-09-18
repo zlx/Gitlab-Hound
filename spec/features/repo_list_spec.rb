@@ -26,7 +26,7 @@ feature "Repo list", js: true do
     expect(page).to have_content repo.full_github_name
   end
 
-  scenario "user syncs repos" do
+  scenario "user syncs repos", sidekiq: :inline do
     user = create(:user)
     repo = create(:repo, full_github_name: "user1/test-repo")
     user.repos << repo
@@ -44,11 +44,11 @@ feature "Repo list", js: true do
   end
 
   scenario "user signs up" do
-      user = create(:user)
+    user = create(:user)
 
-      sign_in_as(user)
+    sign_in_as(user)
 
-      expect(page).to have_content I18n.t("syncing_repos").upcase
+    expect(page).to have_content I18n.t("syncing_repos").upcase
   end
 
   scenario "user activates repo" do
