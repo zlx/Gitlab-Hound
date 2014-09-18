@@ -1,4 +1,5 @@
 require "fast_spec_helper"
+require 'attr_extras'
 require "app/policies/commenting_policy"
 
 describe CommentingPolicy do

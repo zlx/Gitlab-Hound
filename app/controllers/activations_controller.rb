@@ -6,7 +6,7 @@ class ActivationsController < ApplicationController
 
   def create
     if activator.activate(repo, Rails.application.secrets['gitlab_private_token'])
-      #analytics.track_activated(repo)
+      analytics.track_activated(repo)
       render json: repo, status: :created
     else
       report_exception(

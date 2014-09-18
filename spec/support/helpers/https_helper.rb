@@ -1,7 +1,7 @@
 module HttpsHelper
   def with_https_enabled
-    ENV['ENABLE_HTTPS'] = 'yes'
+    Rails.application.secrets['ENABLE_HTTPS'] = true
     yield
-    ENV['ENABLE_HTTPS'] = 'no'
+    Rails.application.secrets['ENABLE_HTTPS'] = false
   end
 end

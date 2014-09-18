@@ -10,6 +10,6 @@ class BuildsController < ApplicationController
   private
 
   def payload
-    @payload ||= GitlabPayload.new(params || request.raw_post)
+    @payload ||= GitlabPayload.new(params.except(:controller, :action) || request.raw_post)
   end
 end

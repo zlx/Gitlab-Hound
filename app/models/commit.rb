@@ -11,7 +11,7 @@ class Commit
   end
 
   def file_content(filename)
-    contents = @github.file_contents(repo_name, filename, sha)
+    @github.file_contents(repo_name, filename, sha).to_s
   rescue Gitlab::Error::Error
     ""
   end

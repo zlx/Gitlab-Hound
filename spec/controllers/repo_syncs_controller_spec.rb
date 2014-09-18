@@ -9,6 +9,6 @@ describe RepoSyncsController, '#create' do
     post :create
 
     expect(JobQueue).to have_received(:push).
-      with(RepoSynchronizationJob, user.id, AuthenticationHelper::GITHUB_TOKEN)
+      with(RepoSynchronizationJob, user.id, Rails.application.secrets['gitlab_private_token'])
   end
 end

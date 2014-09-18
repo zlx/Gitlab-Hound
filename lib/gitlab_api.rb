@@ -60,10 +60,12 @@ class GitlabApi
     )
 
     yield hook if block_given?
-  rescue Exception => error
-    unless error.message.include? 'Hook already exists'
-      raise
+  rescue Gitlab::Error::Error
+    Rails.logger.tagged do
+      Rails.logger.error "Create Hook for #{repo_id} with #{callback_endpoint} fail"
     end
+  rescue Exception
+    raise
   end
 
   def remove_hook(repo_id, hook_id)
@@ -100,8 +102,7 @@ class GitlabApi
   end
 
   def email_address
-    #primary_email = client.emails.detect { |email| email['primary'] }
-    #primary_email['email']
+    client.user.email
   end
 
   private

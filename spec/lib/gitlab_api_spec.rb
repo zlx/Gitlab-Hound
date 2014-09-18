@@ -163,4 +163,14 @@ describe GitlabApi do
     end
   end
 
+  describe "branch_commit" do
+    it "should return branch head commit" do
+      stub_get(
+        'http://gitlab.smartlionapp.com/api/v3/projects/7/repository/branches/feature', 
+        'branch_commits'
+      )
+      expect(api.branch_commit(7, 'feature')).to eq "7b5c3cc8be40ee161ae89a06bba6229da1032a0c"
+    end
+  end
+
 end

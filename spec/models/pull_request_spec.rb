@@ -33,8 +33,7 @@ describe PullRequest do
         patch: "@@ -1,1 +1,1\n#{patch_line}",
         content: ""
       )
-      content = double(content: "")
-      github_api = double(commit_files: [file_response], file_contents: content)
+      github_api = double(commit_files: [file_response], file_contents: "", branch_commit: 'assdd234fss')
       pull_request(github_api)
     end
   end
@@ -59,26 +58,6 @@ describe PullRequest do
     end
   end
 
-  describe "#synchronize?" do
-    context "when payload action is synchronize" do
-      it "returns true" do
-        payload = double(:payload, action: "synchronize")
-        pull_request = PullRequest.new(payload, "token")
-
-        expect(pull_request).to be_synchronize
-      end
-    end
-
-    context "when payload action is not synchronize" do
-      it "returns false" do
-        payload = double(:payload, action: "notsynchronize")
-        pull_request = PullRequest.new(payload, "token")
-
-        expect(pull_request).not_to be_synchronize
-      end
-    end
-  end
-
   describe "#comments" do
     it "returns comments on pull request" do
       payload = double(
@@ -91,7 +70,7 @@ describe PullRequest do
       filename = "spec/models/style_guide_spec.rb"
       comment = double(:comment, position: patch_position, path: filename)
       github = double(:github, pull_request_comments: [comment])
-      allow(GithubApi).to receive(:new).and_return(github)
+      allow(GitlabApi).to receive(:new).and_return(github)
       pull_request = PullRequest.new(payload, "githubtoken")
 
       comments = pull_request.comments
@@ -111,7 +90,7 @@ describe PullRequest do
       )
       commit = double(:commit, repo_name: payload.full_repo_name)
       github = double(:github_client, add_comment: nil)
-      allow(GithubApi).to receive(:new).and_return(github)
+      allow(GitlabApi).to receive(:new).and_return(github)
       allow(Commit).to receive(:new).and_return(commit)
       violation = double(
         :violation,
@@ -119,6 +98,7 @@ describe PullRequest do
         filename: "test.rb",
         line: double(:line, patch_position: 123)
       )
+
       pull_request = PullRequest.new(payload, "gh-token")
 
       pull_request.add_comment(violation)
@@ -136,8 +116,7 @@ describe PullRequest do
   describe "#config" do
     context "when config file is present" do
       it "returns the contents of custom config" do
-        file_contents = double(:file_contents, content: Base64.encode64("test"))
-        api = double(:github_api, file_contents: file_contents)
+        api = double(:github_api, file_contents: "test", branch_commit: 'assddfre322wwe')
         pull_request = pull_request(api)
 
         config = pull_request.file_content("path/file.extension")
@@ -148,9 +127,9 @@ describe PullRequest do
 
     context "when config file is not present" do
       it "returns blank" do
-        api = double(:github_api)
+        api = double(:github_api, branch_commit: 'assddfre322wwe')
         pull_request = pull_request(api)
-        allow(api).to receive(:file_contents).and_raise(Octokit::NotFound)
+        allow(api).to receive(:file_contents).and_raise(Gitlab::Error::Error)
 
         config = pull_request.file_content("path/file.extension")
 
@@ -164,9 +143,11 @@ describe PullRequest do
       :payload,
       number: 1,
       full_repo_name: "org/repo",
+      source_repo_id: 1,
+      branch_name: 'feature',
       head_sha: "abc123"
     )
-    allow(GithubApi).to receive(:new).and_return(api)
+    allow(GitlabApi).to receive(:new).and_return(api)
     PullRequest.new(payload, "gh-token")
   end
 end

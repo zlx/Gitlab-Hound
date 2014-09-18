@@ -55,7 +55,7 @@ describe BuildRunner, '#run' do
 
       expect(PullRequest).to have_received(:new).with(
         payload,
-        ENV['HOUND_GITHUB_TOKEN']
+        Rails.application.secrets['HOUND_GITHUB_TOKEN']
       )
     end
   end
