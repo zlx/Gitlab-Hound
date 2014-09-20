@@ -56,7 +56,7 @@ class GitlabApi
     hook = client.add_project_hook(
       repo_id, 
       callback_endpoint, 
-      { merge_requests_events: true }
+      { push_events: false, merge_requests_events: true }
     )
 
     yield hook if block_given?
