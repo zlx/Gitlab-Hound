@@ -35,21 +35,12 @@ class GitlabApi
   end
 
   def add_comment(options)
-    # TODO should use comment on line
-    # wait MR https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/137
     repo = repo(options[:commit].repo_name)
-    client.create_merge_request_comment(
-      repo.id, 
-      options[:pull_request_number],
-      %{
-      commit: #{options[:commit].sha},
-      filename: #{options[:filename]},
-      line_position: #{options[:patch_position]},
-      comment: 
-
-      #{options[:comment]}
-    }
-    )
+    client.create_commit_comments(repo.id, options[:commit].sha, options[:comment], {
+      path: options[:filename],
+      line: options[:patch_position],
+      line_type: 'new'
+    })
   end
 
   def create_hook(repo_id, callback_endpoint)
