@@ -36,8 +36,8 @@ class GitlabApi
 
   def add_comment(options)
     repo = repo(options[:commit].repo_name)
-    client.create_commit_comments(repo.id, options[:commit].sha, options[:comment], {
-      path: options[:filename],
+    client.create_merge_request_comment(repo.id, options[:pull_request_number], options[:comment], {
+      file_path: options[:filename],
       line: options[:patch_position],
       line_type: 'new'
     })
@@ -70,10 +70,9 @@ class GitlabApi
   end
 
   def pull_request_comments(full_repo_name, pull_request_number)
-    # TODO return comments with path and position
-    # wait MR https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/137
     repo = repo(full_repo_name)
-    client.merge_request_comments repo.id, pull_request_number
+    client.merge_request_comments(repo.id, pull_request_number)
+    .map { |comment| Comment.new(comment.path, comment.line) }
   end
 
   def pull_request_files(full_repo_name, number)
