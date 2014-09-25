@@ -2,10 +2,9 @@
 source "http://ruby.taobao.org"
 
 ruby "2.1.2"
+gem "rails", "4.1.5"
 
 gem "active_model_serializers"
-gem "analytics-ruby", "~> 2.0.0", require: "segment/analytics"
-gem "angularjs-rails"
 gem "attr_extras"
 gem "bourbon"
 gem "coffee-rails"
@@ -19,27 +18,19 @@ gem "jquery-rails"
 gem "memcachier"
 gem "neat"
 gem "newrelic_rpm"
-gem "omniauth-github"
 gem "paranoia", "~> 2.0"
 gem "pg"
-gem "rails", "4.1.5"
+gem 'sinatra'
 gem "sidekiq"
 gem 'sidekiq-failures'
-gem 'sinatra'
 gem "rubocop", "0.25.0"
 gem "sass-rails", "~> 4.0.2"
 gem "sentry-raven"
-gem "stripe"
 gem "uglifier", ">= 1.0.3"
 gem "unicorn"
 gem 'gitlab', path: '../gitlab'
 
-group :staging, :production do
-  gem "rails_12factor"
-end
-
 group :development, :test do
-  gem "foreman"
   gem "konacha"
   gem "poltergeist"
   gem "rspec-rails", ">= 2.14"

@@ -12,9 +12,6 @@ describe BuildRunner, '#run' do
       expect { build_runner.run }.to change { Build.count }.by(1)
       expect(Build.last).to eq repo.builds.last
       expect(Build.last.violations.size).to be >= 1
-      expect(analytics).to have_tracked("Reviewed Repo").
-        for_user(repo.users.first).
-        with(properties: { name: repo.full_github_name })
     end
 
     it 'comments on violations' do

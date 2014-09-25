@@ -96,7 +96,7 @@ describe PullRequest do
         :violation,
         messages: ["A comment"],
         filename: "test.rb",
-        line: double(:line, patch_position: 123)
+        line_number: 123
       )
 
       pull_request = PullRequest.new(payload, "gh-token")
