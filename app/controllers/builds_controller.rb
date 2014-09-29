@@ -21,7 +21,11 @@ class BuildsController < ApplicationController
   end
 
   def push_payload
-    @push_payload ||= GitlabPushPayload.new(params.except(:controller, :action) || request.raw_post)
+    @push_payload ||= GitlabPushPayload.new(params.except(:controller, :action) || request.raw_post, gitlab)
+  end
+
+  def gitlab
+    GitlabApi.new(Rails.application.secrets.gitlab_private_token)
   end
 
 end
