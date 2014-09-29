@@ -1,6 +1,8 @@
 [
   {
     "note": "this is the 1st comment on the 2merge merge request",
+    "file_path": "files/ruby/feature.rb",
+    "line": 5,
     "author": {
       "id": 11,
       "username": "admin",
@@ -12,6 +14,8 @@
   },
   {
     "note": "_Status changed to closed_",
+    "file_path": "path/to/run.rb",
+    "line": 10,
     "author": {
       "id": 11,
       "username": "admin",

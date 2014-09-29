@@ -44,10 +44,18 @@ describe GitlabApi do
   end
 
   describe '#create_hook' do
-    it 'should create merge request hook' do
+    it 'should create merge request & push events hook' do
       callback_url = 'http://example.com/callback_url'
       stub_post('http://gitlab.smartlionapp.com/api/v3/projects/10/hooks', 
                 'gitlab_hook')
+
+      client = double("client", add_project_hook: true)
+      allow(Gitlab).to receive(:client).and_return(client)
+      expect(client).to receive(:add_project_hook).with(
+        10, callback_url, {
+        push_events: true,
+        merge_requests_events: true
+      })
 
       api.create_hook 10, callback_url
     end

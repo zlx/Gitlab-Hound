@@ -47,7 +47,7 @@ class GitlabApi
     hook = client.add_project_hook(
       repo_id, 
       callback_endpoint, 
-      { push_events: false, merge_requests_events: true }
+      { push_events: true, merge_requests_events: true }
     )
 
     yield hook if block_given?
@@ -69,10 +69,14 @@ class GitlabApi
     .map{ |diff| build_commit_diff(diff) }
   end
 
+  def opened_merge_requests(repo_id)
+    client.merge_requests(repo_id, state: 'opened')
+  end
+
   def pull_request_comments(full_repo_name, pull_request_number)
     repo = repo(full_repo_name)
     client.merge_request_comments(repo.id, pull_request_number)
-    .map { |comment| Comment.new(comment.path, comment.line) }
+    .map { |comment| Comment.new(comment.file_path, comment.line) }
   end
 
   def pull_request_files(full_repo_name, number)
