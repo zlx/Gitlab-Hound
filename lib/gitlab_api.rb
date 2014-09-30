@@ -76,7 +76,7 @@ class GitlabApi
   def pull_request_comments(full_repo_name, pull_request_number)
     repo = repo(full_repo_name)
     client.merge_request_comments(repo.id, pull_request_number)
-    .map { |comment| Comment.new(comment.file_path, comment.line) }
+    .map { |comment| Comment.new(comment.file_path, comment.line, comment.note) }
   end
 
   def pull_request_files(full_repo_name, number)
