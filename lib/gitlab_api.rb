@@ -3,8 +3,9 @@ require 'base64'
 
 class GitlabApi
   SERVICES_TEAM_NAME = 'Services'
-
-  pattr_initialize :token
+  # just accept one argument
+  def initialize *args
+  end
 
   def client
     @client ||= Gitlab.client(endpoint: 'http://gitlab.smartlionapp.com/api/v3', private_token: token)
@@ -75,8 +76,14 @@ class GitlabApi
 
   def pull_request_comments(full_repo_name, pull_request_number)
     repo = repo(full_repo_name)
-    client.merge_request_comments(repo.id, pull_request_number)
-    .map { |comment| Comment.new(comment.file_path, comment.line, comment.note) }
+    comments, page = [], 1
+    loop do
+      cs = client.merge_request_comments(repo.id, pull_request_number, per_page: 100, page: page)
+      comments += cs
+      page += 1
+      break if cs.count < 100
+    end
+    comments.map { |comment| Comment.new(comment.file_path, comment.line, comment.note) }
   end
 
   def pull_request_files(full_repo_name, number)
@@ -112,6 +119,10 @@ class GitlabApi
         else
           "modified"
         end)
+  end
+
+  def token
+    Rails.application.secrets.gitlab_private_token
   end
 
 end
