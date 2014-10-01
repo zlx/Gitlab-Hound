@@ -52,7 +52,7 @@ describe BuildRunner, '#run' do
 
       expect(PullRequest).to have_received(:new).with(
         payload,
-        Rails.application.secrets['HOUND_GITHUB_TOKEN']
+        Rails.application.secrets.gitlab['comment_private_token']
       )
     end
   end

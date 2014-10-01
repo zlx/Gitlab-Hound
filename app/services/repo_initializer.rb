@@ -23,16 +23,12 @@ class RepoInitializer
   end
 
   def username
-    Rails.application.secrets['gitlab_username']
+    Rails.application.secrets.gitlab['main_username']
   end
 
   def sync!
-    synchronization = RepoSynchronization.new(@user, gitlab_token)
+    synchronization = RepoSynchronization.new(@user)
     synchronization.start
-  end
-
-  def gitlab_token
-    Rails.application.secrets['gitlab_private_token']
   end
 
   def active!

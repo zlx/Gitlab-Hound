@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe GitlabPushPayload do
   let(:auth_token) { 'authtoken' }
-  let(:api) { GitlabApi.new(auth_token) }
+  let(:api) { GitlabApi.new }
   let(:payload_data) do
     {"before"=>"1ed59b11560d68900409af1c1ce47b13fb8614fb", "after"=>"0ae77252d6b190e62708bbda6e7c546e3451cb45", "ref"=>"refs/heads/feature", "user_id"=>2, "user_name"=>"Jim", "project_id"=>3}
   end

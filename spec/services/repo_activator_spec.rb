@@ -34,36 +34,17 @@ describe RepoActivator do
         expect(response).to be_truthy
       end
 
-      context 'when https is enabled' do
-        it 'creates Gitlab hook using secure build URL' do
-          with_https_enabled do
-            repo = create(:repo)
-            gitlab = stub_gitlab_api
-            activator = RepoActivator.new
+      it 'creates GitLab hook using insecure build URL' do
+        repo = create(:repo)
+        gitlab = stub_gitlab_api
+        activator = RepoActivator.new
 
-            activator.activate(repo, 'gitlabtoken')
+        activator.activate(repo, 'gitlabtoken')
 
-            expect(gitlab).to have_received(:create_hook).with(
-              repo.github_id,
-              URI.join("https://#{Rails.application.secrets['HOST']}", 'builds').to_s
-            )
-          end
-        end
-      end
-
-      context 'when https is disabled' do
-        it 'creates GitLab hook using insecure build URL' do
-          repo = create(:repo)
-          gitlab = stub_gitlab_api
-          activator = RepoActivator.new
-
-          activator.activate(repo, 'gitlabtoken')
-
-          expect(gitlab).to have_received(:create_hook).with(
-            repo.github_id,
-            URI.join("http://#{Rails.application.secrets['HOST']}", 'builds').to_s
-          )
-        end
+        expect(gitlab).to have_received(:create_hook).with(
+          repo.github_id,
+          URI.join("#{Rails.application.secrets.hook_base_url}", 'builds').to_s
+        )
       end
     end
 

@@ -11,10 +11,7 @@ describe RepoSynchronizationJob do
 
       RepoSynchronizationJob.new.perform(user.id, github_token)
 
-      expect(RepoSynchronization).to have_received(:new).with(
-        user,
-        github_token
-      )
+      expect(RepoSynchronization).to have_received(:new).with(user)
       expect(synchronization).to have_received(:start)
       expect(user.reload).not_to be_refreshing_repos
     end

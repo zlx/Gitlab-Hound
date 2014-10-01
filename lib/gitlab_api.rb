@@ -3,9 +3,6 @@ require 'base64'
 
 class GitlabApi
   SERVICES_TEAM_NAME = 'Services'
-  # just accept one argument
-  def initialize *args
-  end
 
   def client
     @client ||= Gitlab.client(endpoint: 'http://gitlab.smartlionapp.com/api/v3', private_token: token)
@@ -122,7 +119,7 @@ class GitlabApi
   end
 
   def token
-    Rails.application.secrets.gitlab_private_token
+    Rails.application.secrets.gitlab['main_private_token']
   end
 
 end

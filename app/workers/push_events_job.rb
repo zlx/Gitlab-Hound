@@ -10,7 +10,7 @@ class PushEventsJob
 
   private
   def gitlab
-    GitlabApi.new(Rails.application.secrets.gitlab_private_token)
+    GitlabApi.new
   end
 
 end

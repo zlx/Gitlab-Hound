@@ -33,13 +33,12 @@ class RepoActivator
 
   def add_hound_to_repo(gitlab, repo)
     gitlab.add_user_to_repo(
-      Rails.application.secrets['HOUND_GITHUB_USERNAME'],
+      Rails.application.secrets.gitlab['comment_username'],
       repo.github_id
     )
   end
 
   def builds_url
-    protocol = Rails.application.secrets['ENABLE_HTTPS'] ? 'https' : 'http'
-    URI.join("#{protocol}://#{Rails.application.secrets['HOST']}", 'builds').to_s
+    URI.join("#{Rails.application.secrets.hook_base_url}", 'builds').to_s
   end
 end

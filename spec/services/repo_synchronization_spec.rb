@@ -16,7 +16,7 @@ describe RepoSynchronization do
       allow(GitlabApi).to receive(:new).and_return(api)
       user = create(:user)
       gitlab_token = 'token'
-      synchronization = RepoSynchronization.new(user, gitlab_token)
+      synchronization = RepoSynchronization.new(user)
 
       synchronization.start
 
@@ -34,7 +34,7 @@ describe RepoSynchronization do
       allow(GitlabApi).to receive(:new).and_return(api)
       user = create(:user)
       gitlab_token = 'token'
-      synchronization = RepoSynchronization.new(user, gitlab_token)
+      synchronization = RepoSynchronization.new(user)
 
       synchronization.start
 
@@ -56,11 +56,11 @@ describe RepoSynchronization do
       user = membership.user
       api = double(:gitlab_api, repos: [resource])
       allow(GitlabApi).to receive(:new).and_return(api)
-      synchronization = RepoSynchronization.new(user, gitlab_token)
+      synchronization = RepoSynchronization.new(user)
 
       synchronization.start
 
-      expect(GitlabApi).to have_received(:new).with(gitlab_token)
+      expect(GitlabApi).to have_received(:new)
       expect(user.repos.size).to eq(1)
       expect(user.repos.first.full_github_name).to eq 'user/newrepo'
       expect(user.repos.first.github_id).to eq 456
@@ -82,7 +82,7 @@ describe RepoSynchronization do
 
       api = double(:gitlab_api, repos: [resource])
       allow(GitlabApi).to receive(:new).and_return(api)
-      synchronization = RepoSynchronization.new(membership.user, gitlab_token)
+      synchronization = RepoSynchronization.new(membership.user)
 
       synchronization.start
 
@@ -108,7 +108,7 @@ describe RepoSynchronization do
         second_user = create(:user)
         api = double(:gitlab_api, repos: [resource])
         allow(GitlabApi).to receive(:new).and_return(api)
-        synchronization = RepoSynchronization.new(second_user, gitlab_token)
+        synchronization = RepoSynchronization.new(second_user)
 
         synchronization.start
 

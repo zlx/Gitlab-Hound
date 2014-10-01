@@ -7,7 +7,7 @@ class RepoSynchronizationJob
     user = User.find(user_id)
     user.update_attribute(:refreshing_repos, true)
 
-    synchronization = RepoSynchronization.new(user, github_token)
+    synchronization = RepoSynchronization.new(user)
     synchronization.start
 
     user.update_attribute(:refreshing_repos, false)

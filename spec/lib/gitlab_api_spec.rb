@@ -7,7 +7,7 @@ require 'json'
 
 describe GitlabApi do
   let(:auth_token) { 'authtoken' }
-  let(:api) { GitlabApi.new(auth_token) }
+  let(:api) { GitlabApi.new }
   let(:repo_id) { 10 }
   let(:repo_name) { 'namespace/name' }
 
@@ -141,7 +141,7 @@ describe GitlabApi do
         'project_with_name'
       )
       stub_get(
-        "http://gitlab.smartlionapp.com/api/v3/projects/7/merge_request/#{mr_number}/comments", 
+        "http://gitlab.smartlionapp.com/api/v3/projects/7/merge_request/#{mr_number}/comments?page=1&per_page=100", 
         'gitlab_comments'
       )
       comment = api.pull_request_comments(repo_name, mr_number).last

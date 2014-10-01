@@ -4,3 +4,5 @@
 /log/*.log
 /tmp
 dump.rdb
+config/secrets.yml
+config/database.yml

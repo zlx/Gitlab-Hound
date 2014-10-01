@@ -105,7 +105,7 @@ describe CommentingPolicy do
 
   def stub_violation(options = {})
     line = double(:line, patch_position: 1)
-    defaults = { filename: "foo.rb", messages: ["Extra newline"], line: line }
+    defaults = { filename: "foo.rb", messages: ["Extra newline"], line: line, line_number: 1 }
     double(:violation, defaults.merge(options))
   end
 

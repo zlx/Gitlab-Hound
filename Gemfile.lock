@@ -1,5 +1,6 @@
-PATH
-  remote: ../gitlab
+GIT
+  remote: git://github.com/zlx/gitlab.git
+  revision: e8e19b0475d6c9138bc8c5f9c92788098e863b96
   specs:
     gitlab (3.2.0)
       httparty

@@ -27,7 +27,7 @@ class BuildRunner
   end
 
   def pull_request
-    @pull_request ||= PullRequest.new(payload, Rails.application.secrets['HOUND_GITHUB_TOKEN'])
+    @pull_request ||= PullRequest.new(payload, Rails.application.secrets.gitlab['comment_private_token'])
   end
 
   def repo

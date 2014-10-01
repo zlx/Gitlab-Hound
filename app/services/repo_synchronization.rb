@@ -1,11 +1,9 @@
 class RepoSynchronization
-  ORGANIZATION_TYPE = 'Organization'
-
-  pattr_initialize :user, :github_token
+  pattr_initialize :user
   attr_reader :user
 
   def api
-    @api ||= GitlabApi.new(github_token)
+    @api ||= GitlabApi.new
   end
 
   def start
