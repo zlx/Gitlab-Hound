@@ -14,4 +14,18 @@ describe BuildsController, '#create' do
       kind_of(Hash)
     )
   end
+
+  it 'enqueues push events job' do
+    allow(JobQueue).to receive(:push)
+    payload_data = File.read(
+      'spec/support/fixtures/push_events.json'
+    )
+
+    post :create, JSON.parse(payload_data)
+
+    expect(JobQueue).to have_received(:push).with(
+      PushEventsJob,
+      kind_of(Hash)
+    )
+  end
 end

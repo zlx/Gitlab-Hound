@@ -1,28 +1,21 @@
-require 'fast_spec_helper'
-require 'attr_extras'
-require 'lib/gitlab_api'
-require 'app/models/commit_diff'
-require 'app/models/comment'
-require 'json'
+require 'spec_helper'
 
 describe GitlabApi do
-  let(:auth_token) { 'authtoken' }
   let(:api) { GitlabApi.new }
   let(:repo_id) { 10 }
   let(:repo_name) { 'namespace/name' }
 
-  describe '#repos' do
+  context '#repos' do
     it 'fetches all repos from Github' do
       stub_get('http://gitlab.smartlionapp.com/api/v3/projects', 'projects')
-      repos = api.repos
-      expect(repos.size).to eq 2
+      expect(api.repos.size).to eq 2
     end
   end
 
-  describe '#add_user_to_repo' do
+  context '#add_user_to_repo' do
     it 'should check user in project team members' do
       repo_id = 10
-      stub_get('http://gitlab.smartlionapp.com/api/v3/projects/10', 'project')
+      stub_get("http://gitlab.smartlionapp.com/api/v3/projects/#{repo_id}", 'project')
       stub_get(
         'http://gitlab.smartlionapp.com/api/v3/projects/10/members?query=zlx', 
         'team_users'

@@ -2,7 +2,6 @@ require 'gitlab'
 require 'base64'
 
 class GitlabApi
-  SERVICES_TEAM_NAME = 'Services'
   def initialize token=nil
     @token = token || default_token
   end

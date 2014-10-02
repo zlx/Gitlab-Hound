@@ -12,6 +12,14 @@ Usage
 5. `bin/rails s`
 6. `bundle exec sidekiq -C config/sidekiq.yml`
 
+Custom Style
+-----------
+
+### Ruby
+
+Default: https://github.com/bbatsov/rubocop/blob/master/config/enabled.yml
+Config in .hound.yml of root of your project
+
 Contributing
 ------------
 
