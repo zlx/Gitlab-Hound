@@ -7,3 +7,7 @@ development: &default
 test:
   <<: *default
   database: hound_test
+
+test:
+  <<: *default
+  database: hound_production
