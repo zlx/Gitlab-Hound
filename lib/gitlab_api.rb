@@ -3,9 +3,12 @@ require 'base64'
 
 class GitlabApi
   SERVICES_TEAM_NAME = 'Services'
+  def initialize token=nil
+    @token = token || default_token
+  end
 
   def client
-    @client ||= Gitlab.client(endpoint: 'http://gitlab.smartlionapp.com/api/v3', private_token: token)
+    @client ||= Gitlab.client(endpoint: 'http://gitlab.smartlionapp.com/api/v3', private_token: @token)
   end
 
   def repos
@@ -118,7 +121,7 @@ class GitlabApi
         end)
   end
 
-  def token
+  def default_token
     Rails.application.secrets.gitlab['main_private_token']
   end
 

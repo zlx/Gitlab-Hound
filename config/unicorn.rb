@@ -1,5 +1,5 @@
 RAILS_ROOT = File.expand_path("../..", __FILE__)
-ENV["RACK_ENV"] = ENV["RAILS_ENV"] ||= "development"
+ENV["RACK_ENV"] = ENV["RAILS_ENV"] ||= "production"
 worker_processes Integer(ENV["WEB_CONCURRENCY"] || 3)
 timeout 15
 preload_app true
