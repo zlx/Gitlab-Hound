@@ -1,6 +1,5 @@
 class RepoInitializer
   def self.run
-    p "=====Start Config Repos===="
     new.run
   end
 
@@ -33,16 +32,26 @@ class RepoInitializer
 
   def active!
     activator = RepoActivator.new
-    repos = Repo.where(full_github_name: active_repos)
-    p "=====Config #{active_repos.size} repos: #{active_repos.join('、')}===="
+
+    active_repos activator
+    deactive_repos activator
+  end
+
+  def active_repos activator
+    repos = Repo.where(full_github_name: active_repos_config)
     repos.each do |repo|
-      if repo.active? || activator.activate(repo, gitlab_token)
-        p "=====Active #{repo.full_github_name} Success!===="
-      end
+      activator.activate(repo) unless repo.active?
     end
   end
 
-  def active_repos
-    Rails.application.secrets['active_repos'] || []
+  def deactive_repos activator
+    repos = Repo.active.where.not(full_github_name: active_repos_config)
+    repos.each do |repo|
+      activator.deactivate(repo) if repo.active?
+    end
+  end
+
+  def active_repos_config
+    Rails.application.secrets.active_repos || []
   end
 end
