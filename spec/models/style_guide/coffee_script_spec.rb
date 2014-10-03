@@ -1,11 +1,15 @@
-require "fast_spec_helper"
-require "coffeelint"
 require "active_support/core_ext/string/strip"
+require "active_support/inflector"
+require "attr_extras"
+require "coffeelint"
+require "fast_spec_helper"
+
+require "app/models/style_guide/base"
 require "app/models/style_guide/coffee_script"
 require "app/models/violation"
 
 describe StyleGuide::CoffeeScript do
-  describe "#violations" do
+  describe "#violations_in_file" do
     context "with default configuration" do
       context "for long line" do
         it "returns violation" do
@@ -40,40 +44,34 @@ describe StyleGuide::CoffeeScript do
       end
     end
 
-    context "with violation on line that was not modified" do
+    context "with violation on unchanged line" do
       it "finds no violations" do
         file = double(
           :file,
           content: "'hello'",
           filename: "lib/test.coffee",
-          modified_line_at: nil,
+          line_at: nil,
         )
-        style_guide = StyleGuide::CoffeeScript.new
+        repo_config = double("RepoConfig", enabled_for?: true, for: {})
+        style_guide = StyleGuide::CoffeeScript.new(repo_config)
 
-        violations = style_guide.violations(file)
+        violations = style_guide.violations_in_file(file)
 
-        expect(violations).to eq []
+        expect(violations.count).to eq 0
       end
     end
 
     private
 
     def violations_in(content)
-      unless content.end_with?("\n")
-        content += "\n"
-      end
-
-      style_guide = StyleGuide::CoffeeScript.new
-      style_guide.violations(build_file(content)).map(&:messages).flatten
+      repo_config = double("RepoConfig", enabled_for?: true, for: {})
+      style_guide = StyleGuide::CoffeeScript.new(repo_config)
+      style_guide.violations_in_file(build_file(content)).flat_map(&:messages)
     end
 
     def build_file(content)
-      double(
-        :file,
-        content: content,
-        filename: "test.coffee",
-        modified_line_at: 1
-      )
+      line = double("Line", content: "blah", number: 1, patch_position: 2)
+      double(:file, content: content, filename: "test.coffee", line_at: line)
     end
   end
 end
