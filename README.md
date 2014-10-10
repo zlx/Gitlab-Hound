@@ -12,13 +12,19 @@ Usage
 5. `bin/rails s`
 6. `bundle exec sidekiq -C config/sidekiq.yml`
 
+Read http://blog.zlxstar.me/blog/2014/10/02/gitlabhound-di-yi-ban-shang-xian-le/ for more detail 
+
 Custom Style
 -----------
 
 ### Ruby
 
-Default: https://github.com/bbatsov/rubocop/blob/master/config/enabled.yml
-Config in .hound.yml of root of your project
+Default: https://github.com/zlx/Gitlab-Hound/blob/master/config/style_guides/ruby.yml
+
+Custom Config: Config in .hound.yml of root of your project
+
+All cops Supported: https://github.com/bbatsov/rubocop/blob/master/config/enabled.yml
+
 
 Contributing
 ------------
