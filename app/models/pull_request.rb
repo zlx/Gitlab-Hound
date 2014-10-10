@@ -33,8 +33,8 @@ class PullRequest
     payload.action == "opened"
   end
 
-  def synchronize?
-    payload.action == "synchronize"
+  def reopened?
+    payload.action == "reopened"
   end
 
   private
