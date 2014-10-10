@@ -17,7 +17,7 @@ class CommentingPolicy
 
   def existing_violation_messages(violation)
     previous_comments_on_line(violation).map(&:body).
-      flat_map { |body| body.split("<br>") }
+      flat_map { |body| body.split("\r\n\r\n") }
   end
 
   def previous_comments_on_line(violation)
