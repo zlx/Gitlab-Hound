@@ -7,7 +7,7 @@ class GitlabApi
   end
 
   def client
-    @client ||= Gitlab.client(endpoint: 'http://gitlab.smartlionapp.com/api/v3', private_token: @token)
+    @client ||= Gitlab.client(endpoint: gitlab_base_url, private_token: @token)
   end
 
   def repos
@@ -17,7 +17,7 @@ class GitlabApi
   def add_user_to_repo(username, repo_id)
     repo = repo(repo_id)
     if client.team_members(repo_id, query: username).empty?
-      fail "Please add #{username} into #{repo.name} team members"
+      fail "请确保 #{username} 加入了项目 #{repo.path_with_namespace}!!"
     end
     true
   end
@@ -86,6 +86,7 @@ class GitlabApi
   end
 
   def pull_request_files(full_repo_name, number)
+    p full_repo_name
     repo = repo(full_repo_name)
     mr = client.merge_request(repo.id, number)
     client.compare(repo.id, mr.target_branch, mr.source_branch)
@@ -122,6 +123,10 @@ class GitlabApi
 
   def default_token
     Rails.application.secrets.gitlab['main_private_token']
+  end
+
+  def gitlab_base_url
+    Rails.application.secrets.gitlab['base_url']
   end
 
 end

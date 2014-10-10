@@ -18,7 +18,7 @@ class PullRequest
   def add_comment(violation)
     api.add_comment(
       pull_request_number: number,
-      comment: violation.messages.join("<br>"),
+      comment: violation.messages.join("\r\n\r\n"),
       commit: head_commit,
       filename: violation.filename,
       patch_position: violation.line_number
@@ -33,8 +33,8 @@ class PullRequest
     payload.action == "opened"
   end
 
-  def synchronize?
-    payload.action == "synchronize"
+  def reopened?
+    payload.action == "reopened"
   end
 
   private

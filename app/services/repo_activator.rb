@@ -1,29 +1,16 @@
 class RepoActivator
   def activate(repo)
-    change_repository_state_quietly do
-      gitlab = GitlabApi.new
-      add_hound_to_repo(gitlab, repo) && create_web_hook(gitlab, repo)
-    end
+    gitlab = GitlabApi.new
+    add_hound_to_repo(gitlab, repo) && create_web_hook(gitlab, repo)
   end
 
   def deactivate(repo)
-    change_repository_state_quietly do
-      gitlab = GitlabApi.new
-      gitlab.remove_hook(repo.github_id, repo.hook_id)
-      repo.deactivate
-    end
+    gitlab = GitlabApi.new
+    gitlab.remove_hook(repo.github_id, repo.hook_id)
+    repo.deactivate
   end
 
   private
-
-  def change_repository_state_quietly
-    yield
-  rescue Exception => error
-    Rails.logger.tagged("REPO_ACTIVATOR") do
-      Rails.logger.error "#{error}"
-    end
-    false
-  end
 
   def create_web_hook(gitlab, repo)
     gitlab.create_hook(repo.github_id, builds_url) do |hook|
