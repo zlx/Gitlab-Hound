@@ -14,17 +14,68 @@ Usage
 
 Read http://blog.zlxstar.me/blog/2014/10/02/gitlabhound-di-yi-ban-shang-xian-le/ for more detail 
 
+Language Support
+-------------
+
++ Ruby
++ JavaScript
++ CoffeeScript
+
+
 Custom Style
 -----------
 
 ### Ruby
 
-Default: https://github.com/zlx/Gitlab-Hound/blob/master/config/style_guides/ruby.yml
+To enable Ruby style checking, add the following to .hound.yml in the root of your project
 
-Custom Config: Config in .hound.yml of root of your project
+```
+ruby:
+  enabled: true
+```
 
-All cops Supported: https://github.com/bbatsov/rubocop/blob/master/config/enabled.yml
+Hound uses [RUBOCOP](https://github.com/bbatsov/rubocop) internally so you can configure Hound by adding a [RUBOCOP CONFIG](https://github.com/bbatsov/rubocop/blob/master/config/enabled.yml) to your project and adding the following to .hound.yml in the root of your project.
 
+```
+ruby:
+  enabled: true
+  config_file: config/.rubocop.yml
+```
+
+
+### CoffeeScript
+
+To enable CoffeeScript style checking, add the following to .hound.yml in the root of your project
+
+```
+coffee_script:
+  enabled: true
+```
+
+Hound uses [COFFEELINT](http://www.coffeelint.org/) internally so you can configure Hound by adding a [COFFEELINT CONFIG](https://github.com/clutchski/coffeelint/blob/master/coffeelint.json) to your project and adding the following to .hound.yml in the root of your project.
+
+```
+coffee_script:
+  enabled: true
+  config_file: config/.coffeelint.json
+```
+
+### JavaScript
+
+To enable JavaScript style checking, add the following to .hound.yml in the root of your project
+
+```
+java_script:
+  enabled: true
+```
+
+Hound uses [JSHINT](https://github.com/jshint/jshint/) internally so you can configure Hound by adding a [JSHINT CONFIG](https://github.com/zlx/Gitlab-Hound/blob/master/config/style_guides/javascript.json) to your project and adding the following to .hound.yml in the root of your project.
+
+```
+java_script:
+  enabled: true
+  config_file: config/.jshint.json
+```
 
 Contributing
 ------------
