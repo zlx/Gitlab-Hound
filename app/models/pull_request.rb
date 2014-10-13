@@ -37,6 +37,10 @@ class PullRequest
     payload.action == "reopened"
   end
 
+  def head_commit
+    @head_commit ||= Commit.new(full_repo_name, payload, api)
+  end
+
   private
 
   def head_commit_files
@@ -59,7 +63,4 @@ class PullRequest
     payload.full_repo_name
   end
 
-  def head_commit
-    @head_commit ||= Commit.new(full_repo_name, payload, api)
-  end
 end
