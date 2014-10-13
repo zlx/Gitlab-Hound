@@ -1,30 +1,21 @@
 # Determine CoffeeScript style guide violations per-line.
 module StyleGuide
-  class CoffeeScript
-    DEFAULT_CONFIG_FILE = "config/style_guides/coffeescript.json"
+  class CoffeeScript < Base
+    DEFAULT_CONFIG_FILE = File.join(CONFIG_DIR, "coffeescript.json")
 
-    def violations(file)
-      violations_on_modified_lines(file).map do |line_number, violations|
-        modified_line = file.modified_line_at(line_number)
-        messages = violations.map { |violation| violation["message"] }.uniq
-        Violation.new(file.filename, modified_line, messages)
+    def violations_in_file(file)
+      Coffeelint.lint(file.content, config).map do |violation|
+        Violation.new(file, violation["lineNumber"], violation["message"])
       end
     end
 
     private
 
-    def violations_on_modified_lines(file)
-      violations_per_line(file).select do |line_number, _|
-        file.modified_line_at(line_number)
-      end
-    end
-
-    def violations_per_line(file)
-      Coffeelint.lint(file.content, config).
-        group_by { |violation| violation["lineNumber"] }
-    end
-
     def config
+      default_config.merge(repo_config.for(name))
+    end
+
+    def default_config
       JSON.parse(File.read(DEFAULT_CONFIG_FILE))
     end
   end

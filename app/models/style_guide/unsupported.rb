@@ -1,7 +1,7 @@
 # Returns empty set of violations.
 module StyleGuide
-  class Unsupported
-    def violations(_)
+  class Unsupported < Base
+    def violations_in_file(_)
       []
     end
   end
