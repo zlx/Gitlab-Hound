@@ -6,6 +6,12 @@ GIT
       httparty
       terminal-table
 
+GIT
+  remote: git://github.com/zlx/jlint.git
+  revision: 3842932afdd03511c3517e8713e30d2ab0ef1ed1
+  specs:
+    jlint (0.1.0)
+
 GEM
   remote: http://ruby.taobao.org/
   specs:
@@ -289,6 +295,7 @@ DEPENDENCIES
   gitlab!
   haml-rails
   high_voltage
+  jlint!
   jquery-rails
   jshintrb
   konacha

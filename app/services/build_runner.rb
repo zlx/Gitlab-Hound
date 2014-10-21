@@ -3,7 +3,6 @@ class BuildRunner
 
   def run
     if repo && relevant_pull_request?
-      p violations
       repo.builds.create!(violations: violations)
       commenter.comment_on_violations(violations)
     end
