@@ -11,7 +11,7 @@ class Commit
   end
 
   def file_content(filename)
-    @github.file_contents(repo_name, filename, sha).to_s
+    @github.file_contents(repo_name, filename, sha).to_s.force_encoding("UTF-8")
   rescue Gitlab::Error::Error
     ""
   end
