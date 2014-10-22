@@ -3,9 +3,10 @@ class RepoConfig
   FILE_TYPES = {
     ".yml" => "yaml",
     ".json" => "json",
+    ".xml" => "xml",
   }
   HOUND_CONFIG_FILE = ".hound.yml"
-  STYLE_GUIDES = %w(ruby coffee_script java_script)
+  STYLE_GUIDES = %w(ruby coffee_script java_script java)
 
   pattr_initialize :commit
 
@@ -74,5 +75,9 @@ class RepoConfig
 
   def parse_json(content)
     JSON.parse(content)
+  end
+
+  def parse_xml(content)
+    content.blank? ? nil : content
   end
 end

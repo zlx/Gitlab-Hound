@@ -9,6 +9,7 @@ gem "attr_extras"
 gem "bourbon"
 gem "coffee-rails"
 gem "coffeelint"
+gem "jlint", github: 'zlx/jlint'
 gem "jshintrb"
 gem "dalli"
 gem "faraday-http-cache"

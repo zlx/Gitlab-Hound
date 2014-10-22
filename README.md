@@ -20,6 +20,7 @@ Language Support
 + Ruby
 + JavaScript
 + CoffeeScript
++ Java
 
 
 Custom Style
@@ -34,7 +35,7 @@ ruby:
   enabled: true
 ```
 
-Hound uses [RUBOCOP](https://github.com/bbatsov/rubocop) internally so you can configure Hound by adding a [RUBOCOP CONFIG](https://github.com/bbatsov/rubocop/blob/master/config/enabled.yml) to your project and adding the following to .hound.yml in the root of your project.
+We uses [RUBOCOP](https://github.com/bbatsov/rubocop) internally so you can configure Gitlab-Hound by adding a [RUBOCOP CONFIG](https://github.com/bbatsov/rubocop/blob/master/config/enabled.yml) to your project and adding the following to .hound.yml in the root of your project.
 
 ```
 ruby:
@@ -52,7 +53,7 @@ coffee_script:
   enabled: true
 ```
 
-Hound uses [COFFEELINT](http://www.coffeelint.org/) internally so you can configure Hound by adding a [COFFEELINT CONFIG](https://github.com/clutchski/coffeelint/blob/master/coffeelint.json) to your project and adding the following to .hound.yml in the root of your project.
+We use [COFFEELINT](http://www.coffeelint.org/) internally so you can configure Gitlab-Hound by adding a [COFFEELINT CONFIG](https://github.com/clutchski/coffeelint/blob/master/coffeelint.json) to your project and adding the following to .hound.yml in the root of your project.
 
 ```
 coffee_script:
@@ -69,13 +70,32 @@ java_script:
   enabled: true
 ```
 
-Hound uses [JSHINT](https://github.com/jshint/jshint/) internally so you can configure Hound by adding a [JSHINT CONFIG](https://github.com/zlx/Gitlab-Hound/blob/master/config/style_guides/javascript.json) to your project and adding the following to .hound.yml in the root of your project.
+We use [JSHINT](https://github.com/jshint/jshint/) internally so you can configure Gitlab-Hound by adding a [JSHINT CONFIG](https://github.com/zlx/Gitlab-Hound/blob/master/config/style_guides/javascript.json) to your project and adding the following to .hound.yml in the root of your project.
 
 ```
 java_script:
   enabled: true
   config_file: config/.jshint.json
 ```
+
+### Java
+
+To enable Java style checking, add the following to .hound.yml in the root of your project
+
+```
+java:
+  enabled: true
+```
+
+We use [check styles](https://github.com/checkstyle/checkstyle) internally so you can configure Gitlab-Hound by [custom config](https://github.com/zlx/jlint/blob/master/doc/sun_checks.xml) to your project and adding the following to .hound.yml in the root of your project.
+
+```
+java:
+  enabled: true
+  config_file: config/.java_custom.xml
+```
+
+Default we use [sun checks](https://github.com/zlx/jlint/blob/master/doc/sun_checks.xml) for style checking, you can download google checks or sun checks from [here](https://github.com/zlx/jlint/tree/master/doc), and change them according to your team [check style checks](http://checkstyle.sourceforge.net/checks.html)
 
 Contributing
 ------------
