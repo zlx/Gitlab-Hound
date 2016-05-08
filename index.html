@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640">
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Gitlab-hound by zlx</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/zlx/Gitlab-Hound">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Gitlab-hound</h1>
+            <h2>Hound for Gitlab</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/zlx/Gitlab-Hound/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/zlx/Gitlab-Hound/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>
+<a id="gitlab-hound" class="anchor" href="#gitlab-hound" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gitlab-Hound</h1>
+
+<p>Gitlab-Hound reviews Gitlab Merge Request for style guide violations.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<ol>
+<li>
+<code>cp config/secrets.yml.example config/secrets.yml</code> and change</li>
+<li>
+<code>cp config/database.yml.example config/database.yml</code> and change</li>
+<li><code>bundle install &amp; bundle exec rake db:setup</code></li>
+<li><code>bin/rails s</code></li>
+<li><code>bundle exec sidekiq -C config/sidekiq.yml</code></li>
+</ol>
+
+<p>Read <a href="http://blog.zlxstar.me/blog/2014/10/02/gitlabhound-di-yi-ban-shang-xian-le/">gitlab-hound 发布了</a> for more detail </p>
+
+<h2>
+<a id="language-support" class="anchor" href="#language-support" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Language Support</h2>
+
+<ul>
+<li>Ruby</li>
+<li>JavaScript</li>
+<li>CoffeeScript</li>
+<li>Java</li>
+</ul>
+
+<h2>
+<a id="custom-style" class="anchor" href="#custom-style" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Custom Style</h2>
+
+<h3>
+<a id="ruby" class="anchor" href="#ruby" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Ruby</h3>
+
+<p>To enable Ruby style checking, add the following to .hound.yml in the root of your project</p>
+
+<pre><code>ruby:
+  enabled: true
+</code></pre>
+
+<p>We uses <a href="https://github.com/bbatsov/rubocop">RUBOCOP</a> internally so you can configure Gitlab-Hound by adding a <a href="https://github.com/bbatsov/rubocop/blob/master/config/enabled.yml">RUBOCOP CONFIG</a> to your project and adding the following to .hound.yml in the root of your project.</p>
+
+<pre><code>ruby:
+  enabled: true
+  config_file: config/.rubocop.yml
+</code></pre>
+
+<h3>
+<a id="coffeescript" class="anchor" href="#coffeescript" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CoffeeScript</h3>
+
+<p>To enable CoffeeScript style checking, add the following to .hound.yml in the root of your project</p>
+
+<pre><code>coffee_script:
+  enabled: true
+</code></pre>
+
+<p>We use <a href="http://www.coffeelint.org/">COFFEELINT</a> internally so you can configure Gitlab-Hound by adding a <a href="https://github.com/clutchski/coffeelint/blob/master/coffeelint.json">COFFEELINT CONFIG</a> to your project and adding the following to .hound.yml in the root of your project.</p>
+
+<pre><code>coffee_script:
+  enabled: true
+  config_file: config/.coffeelint.json
+</code></pre>
+
+<h3>
+<a id="javascript" class="anchor" href="#javascript" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>JavaScript</h3>
+
+<p>To enable JavaScript style checking, add the following to .hound.yml in the root of your project</p>
+
+<pre><code>java_script:
+  enabled: true
+</code></pre>
+
+<p>We use <a href="https://github.com/jshint/jshint/">JSHINT</a> internally so you can configure Gitlab-Hound by adding a <a href="https://github.com/zlx/Gitlab-Hound/blob/master/config/style_guides/javascript.json">JSHINT CONFIG</a> to your project and adding the following to .hound.yml in the root of your project.</p>
+
+<pre><code>java_script:
+  enabled: true
+  config_file: config/.jshint.json
+</code></pre>
+
+<h3>
+<a id="java" class="anchor" href="#java" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Java</h3>
+
+<p>To enable Java style checking, add the following to .hound.yml in the root of your project</p>
+
+<pre><code>java:
+  enabled: true
+</code></pre>
+
+<p>We use <a href="https://github.com/checkstyle/checkstyle">check styles</a> internally so you can configure Gitlab-Hound by <a href="https://github.com/zlx/jlint/blob/master/doc/sun_checks.xml">custom config</a> to your project and adding the following to .hound.yml in the root of your project.</p>
+
+<pre><code>java:
+  enabled: true
+  config_file: config/.java_custom.xml
+</code></pre>
+
+<p>Default we use <a href="https://github.com/zlx/jlint/blob/master/doc/sun_checks.xml">sun checks</a> for style checking, you can download google checks or sun checks from <a href="https://github.com/zlx/jlint/tree/master/doc">here</a>, and change them according to your team <a href="http://checkstyle.sourceforge.net/checks.html">check style checks</a></p>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>First, thank you for contributing!</p>
+
+<p>Here a few guidelines to follow:</p>
+
+<ol>
+<li>Write tests</li>
+<li>Make sure the entire test suite passes locally</li>
+<li>Open a pull request on GitHub</li>
+</ol>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/zlx">zlx</a> can be found on <a href="https://github.com/zlx/Gitlab-Hound">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="https://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
