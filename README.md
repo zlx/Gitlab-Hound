@@ -12,7 +12,7 @@ Usage
 5. `bin/rails s`
 6. `bundle exec sidekiq -C config/sidekiq.yml`
 
-Read [gitlab-hound 发布了](http://blog.zlxstar.me/blog/2014/10/02/gitlabhound-di-yi-ban-shang-xian-le/) for more detail 
+Read [gitlab-hound 发布了](https://www.zlxstar.me/blog/2014/10/02/gitlabhound-di-yi-ban-shang-xian-le/) for more detail 
 
 Language Support
 -------------
